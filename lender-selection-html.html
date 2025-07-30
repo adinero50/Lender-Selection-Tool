@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monday.com Lender Selection Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f6f7fb;
+            margin: 0;
+            padding: 20px;
+            color: #323338;
+            min-height: 100vh;
+        }
+        
+        .monday-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e1e5e9;
+            margin-bottom: 20px;
+        }
+        
+        .monday-header {
+            padding: 24px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .monday-app-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .monday-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #0073ea 0%, #0099ff 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .monday-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #323338;
+            margin: 0;
+        }
+        
+        .monday-subtitle {
+            color: #676879;
+            margin: 4px 0 0 0;
+            font-size: 14px;
+        }
+        
+        .monday-content {
+            padding: 24px;
+        }
+        
+        .monday-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #323338;
+            margin-bottom: 20px;
+        }
+        
+        .monday-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .monday-field {
+            margin-bottom: 20px;
+        }
+        
+        .monday-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #323338;
+            margin-bottom: 8px;
+        }
+        
+        .monday-multiselect {
+            border: 2px solid #d0d4da;
+            border-radius: 4px;
+            padding: 12px;
+            background: white;
+            min-height: 160px;
+            max-height: none;
+        }
+        
+        .monday-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 2px 0;
+            transition: background-color 0.15s;
+        }
+        
+        .monday-checkbox-wrapper:hover {
+            background-color: #f5f6fa;
+        }
+        
+        .monday-checkbox {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            accent-color: #0073ea;
+        }
+        
+        .monday-checkbox-text {
+            font-size: 14px;
+            color: #323338;
+        }
+        
+        .monday-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #d0d4da;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #323338;
+            background: white;
+        }
+        
+        .monday-input:focus {
+            outline: none;
+            border-color: #0073ea;
+        }
+        
+        .monday-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #d0d4da;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #323338;
+            background: white;
+        }
+        
+        .monday-input-group {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .monday-input-with-prefix {
+            position: relative;
+            flex: 1;
+        }
+        
+        .monday-input-prefix {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #676879;
+            font-size: 14px;
+        }
+        
+        .monday-input-with-prefix .monday-input {
+            padding-left: 28px;
+        }
+        
+        .monday-button {
+            background: #0073ea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .monday-button:hover {
+            background: #005cbf;
+        }
+        
+        .monday-button:disabled {
+            background: #c4c4c4;
+            cursor: not-allowed;
+        }
+        
+        .monday-button-success {
+            background: #00ca72;
+        }
+        
+        .monday-button-success:hover {
+            background: #00a860;
+        }
+        
+        .monday-summary {
+            background: #f5f6fa;
+            border: 1px solid #d0d4da;
+            border-radius: 4px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .monday-summary-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .monday-summary-icon {
+            width: 32px;
+            height: 32px;
+            background: #00ca72;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .monday-summary-text {
+            font-weight: 500;
+            color: #323338;
+        }
+        
+        .monday-summary-subtext {
+            color: #676879;
+            font-size: 14px;
+        }
+        
+        .monday-success-banner {
+            background: linear-gradient(135deg, #00ca72 0%, #00a860 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 202, 114, 0.2);
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .monday-success-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .monday-success-text {
+            font-weight: 500;
+            font-size: 15px;
+        }
+        
+        .monday-deal-name-field {
+            position: relative;
+            margin-bottom: 32px;
+        }
+        
+        .monday-suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #0073ea;
+            border-top: 1px solid #d0d4da;
+            border-radius: 0 0 8px 8px;
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
+        
+        .monday-suggestions-dropdown.show {
+            display: block;
+        }
+        
+        .monday-suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #323338;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background-color 0.15s;
+        }
+        
+        .monday-suggestion-item:hover {
+            background-color: #f5f6fa;
+        }
+        
+        .monday-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .monday-check-all-button {
+            background: #f5f6fa;
+            border: 2px solid #d0d4da;
+            color: #323338;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+        
+        .monday-check-all-button:hover {
+            background: #e6e9ef;
+            border-color: #a1a6b7;
+        }
+        
+        .monday-lenders-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 24px 16px;
+        }
+        
+        .monday-lender-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e1e5e9;
+            transition: background-color 0.2s;
+        }
+        
+        .monday-lender-item:hover {
+            background-color: #f5f6fa;
+        }
+        
+        .monday-lender-item:last-child {
+            border-bottom: none;
+        }
+        
+        .monday-lender-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .monday-lender-checkbox {
+            color: #0073ea;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 16px;
+        }
+        
+        .monday-lender-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #323338;
+            margin: 0;
+        }
+        
+        .monday-lender-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-left: 32px;
+        }
+        
+        .monday-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .monday-detail-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #676879;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .monday-detail-value {
+            font-size: 13px;
+            color: #323338;
+            line-height: 1.3;
+        }
+        
+        .monday-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #676879;
+        }
+        
+        .monday-empty-icon {
+            width: 64px;
+            height: 64px;
+            background: #f5f6fa;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+        }
+        
+        .monday-empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #323338;
+            margin-bottom: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <div class="monday-card">
+            <div class="monday-header">
+                <div class="monday-app-title">
+                    <div class="monday-icon">🔍</div>
+                    <div>
+                        <h1 class="monday-title">Lender Selection Tool</h1>
+                        <p class="monday-subtitle">Filter and select lenders from your Monday.com board</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="monday-card">
+            <div class="monday-content">
+                <h2 class="monday-section-title">Filter Criteria</h2>
+                
+                <!-- Deal Name Field -->
+                <div class="monday-deal-name-field">
+                    <label class="monday-label">Deal Name</label>
+                    <input
+                        type="text"
+                        id="dealName"
+                        placeholder="Start typing deal name..."
+                        class="monday-input"
+                    />
+                    <div id="suggestionsDropdown" class="monday-suggestions-dropdown"></div>
+                </div>
+                
+                <div class="monday-grid">
+                    <!-- Program Type -->
+                    <div class="monday-field">
+                        <label class="monday-label">Program Type</label>
+                        <div class="monday-multiselect" id="programType"></div>
+                    </div>
+                    
+                    <!-- Property Type -->
+                    <div class="monday-field">
+                        <label class="monday-label">Property Type</label>
+                        <div class="monday-multiselect" id="propertyType"></div>
+                    </div>
+                    
+                    <!-- Loan Purpose -->
+                    <div class="monday-field">
+                        <label class="monday-label">Loan Purpose</label>
+                        <div class="monday-multiselect" id="loanPurpose"></div>
+                    </div>
+                    
+                    <!-- Geographies -->
+                    <div class="monday-field">
+                        <label class="monday-label">Geographies</label>
+                        <div class="monday-multiselect" id="geographies"></div>
+                    </div>
+
+                    <!-- Loan Size Range -->
+                    <div class="monday-field">
+                        <label class="monday-label">Loan Size Range</label>
+                        <div class="monday-input-group">
+                            <div class="monday-input-with-prefix">
+                                <span class="monday-input-prefix">$</span>
+                                <input type="number" id="loanSizeMin" placeholder="Min" class="monday-input" />
+                            </div>
+                            <div class="monday-input-with-prefix">
+                                <span class="monday-input-prefix">$</span>
+                                <input type="number" id="loanSizeMax" placeholder="Max" class="monday-input" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Loan Term -->
+                    <div class="monday-field">
+                        <label class="monday-label">Loan Term (Months)</label>
+                        <input type="number" id="loanTerm" placeholder="e.g., 24" class="monday-input" />
+                    </div>
+
+                    <!-- Interest Rate Range -->
+                    <div class="monday-field">
+                        <label class="monday-label">Interest Rate Range (%)</label>
+                        <div class="monday-input-group">
+                            <input type="number" id="interestRateMin" step="0.1" placeholder="Min %" class="monday-input" />
+                            <input type="number" id="interestRateMax" step="0.1" placeholder="Max %" class="monday-input" />
+                        </div>
+                    </div>
+
+                    <!-- Amortization -->
+                    <div class="monday-field">
+                        <label class="monday-label">Amortization</label>
+                        <select id="amortization" class="monday-select">
+                            <option value="">Select...</option>
+                        </select>
+                    </div>
+
+                    <!-- Max LTV -->
+                    <div class="monday-field">
+                        <label class="monday-label">Max LTV (%)</label>
+                        <input type="number" id="maxLTV" placeholder="e.g., 75" class="monday-input" />
+                    </div>
+
+                    <!-- Recourse -->
+                    <div class="monday-field">
+                        <label class="monday-label">Recourse</label>
+                        <select id="recourse" class="monday-select">
+                            <option value="">Select...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <button id="searchButton" class="monday-button">
+                        🔍 <span>Search Lenders</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div id="summaryCard" class="monday-card hidden">
+            <div class="monday-content">
+                <div class="monday-summary">
+                    <div class="monday-summary-content">
+                        <div class="monday-summary-icon">✓</div>
+                        <div>
+                            <div id="summaryText" class="monday-summary-text"></div>
+                            <div id="summarySubtext" class="monday-summary-subtext"></div>
+                        </div>
+                    </div>
+                    <button id="sendButton" class="monday-button monday-button-success hidden">
+                        📤 <span>Send to Lender Selection</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Banner -->
+        <div id="successBanner" class="monday-success-banner hidden">
+            <div class="monday-success-icon">✓</div>
+            <div id="successText" class="monday-success-text"></div>
+        </div>
+
+        <!-- Lender Results -->
+        <div id="resultsCard" class="monday-card hidden">
+            <div class="monday-lenders-header">
+                <h3 class="monday-section-title" style="margin: 0;">Matching Lenders</h3>
+                <button id="checkAllButton" class="monday-check-all-button">
+                    <span id="checkAllIcon">☐</span>
+                    <span id="checkAllText">Check All</span>
+                </button>
+            </div>
+            <div id="lendersList"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="monday-card hidden">
+            <div class="monday-content">
+                <div class="monday-empty-state">
+                    <div class="monday-empty-icon">🔍</div>
+                    <h3 class="monday-empty-title">No lenders found</h3>
+                    <p>Try adjusting your filter criteria to find matching lenders in your Monday.com board.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        let filters = {
+            dealName: '',
+            programType: [],
+            propertyType: [],
+            loanPurpose: [],
+            geographies: [],
+            loanSizeMin: '',
+            loanSizeMax: '',
+            loanTerm: '',
+            interestRateMin: '',
+            interestRateMax: '',
+            amortization: '',
+            maxLTV: '',
+            recourse: ''
+        };
+
+        let lenders = [];
+        let selectedLenders = [];
+        let hasSearched = false;
+
+        // Mock deal names for fuzzy matching
+        const mockDealNames = [
+            '2901 Indian Creek Dr Miami, FL',
+            '1920 NE Terre View Dr, Pullman, WA',
+            '495 Eleventh Ave, Hudson Yards, NY',
+            'Nautilus 220',
+            'Tempo Hotel Patchogue',
+            'Comfort Inn Times Square',
+            'Flushing Pointe Three Pack Hilton'
+        ];
+
+        // Filter options
+        const filterOptions = {
+            loanPurpose: ['Acquisition', 'Refinance', 'Construction'],
+            programType: ['Bridge Loan', 'Balance Sheet', 'CMBS', 'Construction', 'Condo Inventory', 'Permanent', 'Note Sale'],
+            propertyType: ['Development', 'Hotel', 'Multifamily', 'Mixed Use', 'Industrial', 'Office', 'Retail', 'Self-Storage', 'Student Housing', 'Condo', 'Land'],
+            geographies: ['Nationwide', 'Northeast', 'Southeast', 'Southwest', 'Northwest', 'West Coast', 'Midwest'],
+            amortization: ['Interest-Only', 'Fully Amortizing', '30 Year', '25 Year', '20 Year'],
+            recourse: ['Yes', 'No', 'Unknown']
+        };
+
+        // Mock lender data
+        const mockLenders = [
+            {
+                id: "item_001",
+                name: 'AB Carval',
+                loanPurpose: ['Acquisition', 'Refinance', 'Construction'],
+                programType: ['Bridge Loan', 'Condo Inventory', 'Construction'],
+                propertyType: ['Development', 'Hotel', 'Multifamily', 'Mixed Use', 'Condo'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 5000000,
+                loanSizeMax: 200000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_002",
+                name: 'Derby Copeland Capital',
+                loanPurpose: ['Refinance', 'Construction'],
+                programType: ['Bridge Loan', 'Construction'],
+                propertyType: ['Development', 'Industrial', 'Office', 'Retail', 'Multifamily', 'Self-Storage', 'Condo', 'Land'],
+                geographies: ['Northeast'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 150000000,
+                loanTerm: 60,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: 'No'
+            },
+            {
+                id: "item_003",
+                name: 'Kennedy Wilson',
+                loanPurpose: ['Acquisition', 'Refinance', 'Construction'],
+                programType: ['Balance Sheet', 'Construction'],
+                propertyType: ['Development', 'Industrial', 'Multifamily', 'Mixed Use'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 50000000,
+                loanSizeMax: 100000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_004",
+                name: 'City National Bank',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['Balance Sheet'],
+                propertyType: ['Multifamily', 'Mixed Use'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 20000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_005",
+                name: 'Acres Capital',
+                loanPurpose: ['Acquisition', 'Construction', 'Refinance'],
+                programType: ['Bridge Loan', 'Construction', 'Permanent'],
+                propertyType: ['Multifamily', 'Student Housing', 'Retail', 'Hotel', 'Office', 'Self-Storage'],
+                geographies: ['Nationwide', 'Northeast'],
+                loanSizeMin: 15000000,
+                loanSizeMax: 100000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: 'No'
+            },
+            {
+                id: "item_006",
+                name: 'Bridge City',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['Bridge Loan', 'Construction'],
+                propertyType: ['Multifamily'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 50000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_007",
+                name: 'JP Morgan',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['CMBS'],
+                propertyType: ['Multifamily'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 50000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_008",
+                name: 'Madison Realty Capital',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['Bridge Loan', 'Construction'],
+                propertyType: ['Multifamily'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 50000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_009",
+                name: 'Urban Standard Capital',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['Bridge Loan', 'Construction'],
+                propertyType: ['Development', 'Industrial', 'Multifamily', 'Mixed Use'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 50000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_010",
+                name: 'Citi Bank',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['CMBS'],
+                propertyType: ['Development', 'Land'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 50000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_011",
+                name: 'First Citizens Bank',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['Balance Sheet'],
+                propertyType: ['Retail', 'Multifamily', 'Mixed Use', 'Self-Storage'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 25000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_012",
+                name: 'Maxim Capital',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['Bridge Loan', 'Construction'],
+                propertyType: ['Retail', 'Multifamily', 'Mixed Use', 'Self-Storage'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 10000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_013",
+                name: 'Columbia Pacific',
+                loanPurpose: ['Refinance'],
+                programType: ['Bridge Loan'],
+                propertyType: ['Retail', 'Multifamily', 'Mixed Use', 'Self-Storage'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 10000000,
+                loanSizeMax: 125000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            },
+            {
+                id: "item_014",
+                name: 'Cerco',
+                loanPurpose: ['Acquisition', 'Refinance'],
+                programType: ['Bridge Loan', 'Note Sale'],
+                propertyType: ['Development', 'Industrial', 'Multifamily', 'Mixed Use', 'Retail', 'Condo'],
+                geographies: ['Nationwide'],
+                loanSizeMin: 1000000,
+                loanSizeMax: 50000000,
+                loanTerm: 120,
+                interestRate: 6.50,
+                amortization: 'Interest-Only',
+                maxLTV: null,
+                recourse: null
+            }
+        ];
+
+        // Utility functions
+        function formatCurrency(value) {
+            if (!value) return '';
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        function filterLenders() {
+            return mockLenders.filter(lender => {
+                // Multi-select filters
+                if (filters.loanPurpose.length > 0 && !filters.loanPurpose.some(purpose => lender.loanPurpose.includes(purpose))) return false;
+                if (filters.programType.length > 0 && !filters.programType.some(type => lender.programType.includes(type))) return false;
+                if (filters.propertyType.length > 0 && !filters.propertyType.some(type => lender.propertyType.includes(type))) return false;
+                if (filters.geographies.length > 0 && !filters.geographies.some(geo => lender.geographies.includes(geo))) return false;
+                
+                // Number filters
+                if (filters.loanSizeMin && lender.loanSizeMax < parseInt(filters.loanSizeMin)) return false;
+                if (filters.loanSizeMax && lender.loanSizeMin > parseInt(filters.loanSizeMax)) return false;
+                if (filters.loanTerm && lender.loanTerm < parseInt(filters.loanTerm)) return false;
+                if (filters.interestRateMin && lender.interestRate < parseFloat(filters.interestRateMin)) return false;
+                if (filters.interestRateMax && lender.interestRate > parseFloat(filters.interestRateMax)) return false;
+                if (filters.maxLTV && lender.maxLTV && lender.maxLTV < parseInt(filters.maxLTV)) return false;
+                
+                // Single select filters
+                if (filters.amortization && lender.amortization !== filters.amortization) return false;
+                if (filters.recourse && lender.recourse !== filters.recourse) return false;
+
+                return true;
+            });
+        }
+
+        function createMultiSelectField(containerId, options, filterKey) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            options.forEach(option => {
+                const wrapper = document.createElement('label');
+                wrapper.className = 'monday-checkbox-wrapper';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'monday-checkbox';
+                checkbox.value = option;
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        if (!filters[filterKey].includes(option)) {
+                            filters[filterKey].push(option);
+                        }
+                    } else {
+                        filters[filterKey] = filters[filterKey].filter(item => item !== option);
+                    }
+                });
+                
+                const text = document.createElement('span');
+                text.className = 'monday-checkbox-text';
+                text.textContent = option;
+                
+                wrapper.appendChild(checkbox);
+                wrapper.appendChild(text);
+                container.appendChild(wrapper);
+            });
+        }
+
+        function setupDealNameAutocomplete() {
+            const input = document.getElementById('dealName');
+            const dropdown = document.getElementById('suggestionsDropdown');
+            
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                filters.dealName = value;
+                
+                if (value.length > 0) {
+                    const matches = mockDealNames.filter(deal => 
+                        deal.toLowerCase().includes(value.toLowerCase())
+                    );
+                    
+                    if (matches.length > 0) {
+                        dropdown.innerHTML = matches.map(match => 
+                            `<div class="monday-suggestion-item" onclick="selectDealName('${match}')">${match}</div>`
+                        ).join('');
+                        dropdown.classList.add('show');
+                    } else {
+                        dropdown.classList.remove('show');
+                    }
+                } else {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+        }
+
+        function selectDealName(dealName) {
+            filters.dealName = dealName;
+            document.getElementById('dealName').value = dealName;
+            document.getElementById('suggestionsDropdown').classList.remove('show');
+        }
+
+        function setupInputFields() {
+            // Single value inputs
+            ['loanSizeMin', 'loanSizeMax', 'loanTerm', 'interestRateMin', 'interestRateMax', 'maxLTV'].forEach(field => {
+                document.getElementById(field).addEventListener('input', (e) => {
+                    filters[field] = e.target.value;
+                });
+            });
+
+            // Select dropdowns
+            ['amortization', 'recourse'].forEach(field => {
+                const select = document.getElementById(field);
+                filterOptions[field].forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    select.appendChild(optionElement);
+                });
+                
+                select.addEventListener('change', (e) => {
+                    filters[field] = e.target.value;
+                });
+            });
+        }
+
+        function handleSearch() {
+            const button = document.getElementById('searchButton');
+            button.disabled = true;
+            button.innerHTML = '🔍 <span>Searching Monday.com Board...</span>';
+            
+            setTimeout(() => {
+                lenders = filterLenders();
+                hasSearched = true;
+                selectedLenders = [];
+                
+                displayResults();
+                
+                button.disabled = false;
+                button.innerHTML = '🔍 <span>Search Lenders</span>';
+            }, 1000);
+        }
+
+        function displayResults() {
+            const summaryCard = document.getElementById('summaryCard');
+            const resultsCard = document.getElementById('resultsCard');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (lenders.length > 0) {
+                // Show summary
+                summaryCard.classList.remove('hidden');
+                document.getElementById('summaryText').textContent = 
+                    `${lenders.length} lender${lenders.length !== 1 ? 's' : ''} matched your criteria`;
+                
+                // Show results
+                resultsCard.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                
+                renderLenders();
+                updateSummary();
+                updateCheckAllButton();
+            } else {
+                summaryCard.classList.remove('hidden');
+                document.getElementById('summaryText').textContent = '0 lenders matched your criteria';
+                
+                resultsCard.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+            }
+        }
+
+        function renderLenders() {
+            const container = document.getElementById('lendersList');
+            container.innerHTML = '';
+            
+            lenders.forEach(lender => {
+                const lenderDiv = document.createElement('div');
+                lenderDiv.className = 'monday-lender-item';
+                
+                const isSelected = selectedLenders.includes(lender.id);
+                
+                lenderDiv.innerHTML = `
+                    <div class="monday-lender-header">
+                        <button class="monday-lender-checkbox" onclick="toggleLenderSelection('${lender.id}')">
+                            ${isSelected ? '☑' : '☐'}
+                        </button>
+                        <h4 class="monday-lender-name">${lender.name}</h4>
+                    </div>
+                    
+                    <div class="monday-lender-details">
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Loan Size</span>
+                            <span class="monday-detail-value">${formatCurrency(lender.loanSizeMin)} - ${formatCurrency(lender.loanSizeMax)}</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Interest Rate</span>
+                            <span class="monday-detail-value">${lender.interestRate}%</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Loan Term</span>
+                            <span class="monday-detail-value">${Math.round(lender.loanTerm / 12)} years</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Amortization</span>
+                            <span class="monday-detail-value">${lender.amortization}</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Recourse</span>
+                            <span class="monday-detail-value">${lender.recourse || 'Not specified'}</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Max LTV</span>
+                            <span class="monday-detail-value">${lender.maxLTV ? `${lender.maxLTV}%` : 'Not specified'}</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Program Types</span>
+                            <span class="monday-detail-value">${lender.programType.join(', ')}</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Property Types</span>
+                            <span class="monday-detail-value">${lender.propertyType.join(', ')}</span>
+                        </div>
+                        
+                        <div class="monday-detail-item">
+                            <span class="monday-detail-label">Geographies</span>
+                            <span class="monday-detail-value">${lender.geographies.join(', ')}</span>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(lenderDiv);
+            });
+        }
+
+        function toggleLenderSelection(lenderId) {
+            if (selectedLenders.includes(lenderId)) {
+                selectedLenders = selectedLenders.filter(id => id !== lenderId);
+            } else {
+                selectedLenders.push(lenderId);
+            }
+            
+            renderLenders();
+            updateSummary();
+            updateCheckAllButton();
+        }
+
+        function updateSummary() {
+            const summarySubtext = document.getElementById('summarySubtext');
+            const sendButton = document.getElementById('sendButton');
+            
+            if (selectedLenders.length > 0) {
+                summarySubtext.textContent = `${selectedLenders.length} selected for export`;
+                summarySubtext.style.display = 'block';
+                sendButton.classList.remove('hidden');
+            } else {
+                summarySubtext.style.display = 'none';
+                sendButton.classList.add('hidden');
+            }
+        }
+
+        function updateCheckAllButton() {
+            const checkAllIcon = document.getElementById('checkAllIcon');
+            const checkAllText = document.getElementById('checkAllText');
+            
+            if (selectedLenders.length === lenders.length && lenders.length > 0) {
+                checkAllIcon.textContent = '☑';
+                checkAllText.textContent = 'Uncheck All';
+            } else {
+                checkAllIcon.textContent = '☐';
+                checkAllText.textContent = 'Check All';
+            }
+        }
+
+        function handleCheckAll() {
+            if (selectedLenders.length === lenders.length) {
+                selectedLenders = [];
+            } else {
+                selectedLenders = lenders.map(lender => lender.id);
+            }
+            
+            renderLenders();
+            updateSummary();
+            updateCheckAllButton();
+        }
+
+        function handleSendToLenderSelection() {
+            // Show success banner
+            const successBanner = document.getElementById('successBanner');
+            const successText = document.getElementById('successText');
+            
+            successText.textContent = `Successfully sent ${selectedLenders.length} lender${selectedLenders.length !== 1 ? 's' : ''} to the Lender Selection tool!`;
+            successBanner.classList.remove('hidden');
+            
+            // Clear results after 4 seconds
+            setTimeout(() => {
+                successBanner.classList.add('hidden');
+                document.getElementById('summaryCard').classList.add('hidden');
+                document.getElementById('resultsCard').classList.add('hidden');
+                document.getElementById('emptyState').classList.add('hidden');
+                
+                lenders = [];
+                selectedLenders = [];
+                hasSearched = false;
+            }, 4000);
+            
+            // In real implementation, this would trigger Monday.com automation
+            console.log('Sending selected lenders to Monday.com:', selectedLenders);
+        }
+
+        // Initialize the application
+        function init() {
+            // Create multi-select fields
+            createMultiSelectField('programType', filterOptions.programType, 'programType');
+            createMultiSelectField('propertyType', filterOptions.propertyType, 'propertyType');
+            createMultiSelectField('loanPurpose', filterOptions.loanPurpose, 'loanPurpose');
+            createMultiSelectField('geographies', filterOptions.geographies, 'geographies');
+            
+            // Setup input fields
+            setupInputFields();
+            
+            // Setup deal name autocomplete
+            setupDealNameAutocomplete();
+            
+            // Setup event listeners
+            document.getElementById('searchButton').addEventListener('click', handleSearch);
+            document.getElementById('checkAllButton').addEventListener('click', handleCheckAll);
+            document.getElementById('sendButton').addEventListener('click', handleSendToLenderSelection);
+        }
+
+        // Make functions global for onclick handlers
+        window.selectDealName = selectDealName;
+        window.toggleLenderSelection = toggleLenderSelection;
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
