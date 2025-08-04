@@ -615,6 +615,13 @@
     </div>
 
     <script>
+        // Monday.com board configuration
+        const MONDAY_BOARD_ID = 9661895956;
+        const MONDAY_API_URL = 'https://api.monday.com/v2';
+        
+        // Replace with your actual Monday.com API token
+        const MONDAY_API_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjQxMzUzNTk3MiwiYWFpIjoxMSwidWlkIjo1NzQxNDQwOCwiaWFkIjoiMjAyNC0wOS0yMFQxNToyNjo0MC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MjIwMDE5NDgsInJnbiI6InVzZTEifQ._usSUktr5Z2yLSzEci7XIj28llYNYkT2HboINlYY6TY';
+
         // Application state
         let filters = {
             dealName: '',
@@ -635,17 +642,63 @@
         let lenders = [];
         let selectedLenders = [];
         let hasSearched = false;
+        let boardDealNames = []; // Will store deal names from Monday.com board
 
-        // Mock deal names for fuzzy matching
-        const mockDealNames = [
-            '2901 Indian Creek Dr Miami, FL',
-            '1920 NE Terre View Dr, Pullman, WA',
-            '495 Eleventh Ave, Hudson Yards, NY',
-            'Nautilus 220',
-            'Tempo Hotel Patchogue',
-            'Comfort Inn Times Square',
-            'Flushing Pointe Three Pack Hilton'
-        ];
+        // Fetch deal names from Monday.com board
+        async function fetchDealNamesFromMonday() {
+            try {
+                const query = `
+                    query {
+                        boards (ids: [${MONDAY_BOARD_ID}]) {
+                            items {
+                                id
+                                name
+                            }
+                        }
+                    }
+                `;
+                
+                const response = await fetch(MONDAY_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${MONDAY_API_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Monday.com API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.errors) {
+                    console.error('Monday.com API errors:', data.errors);
+                    return [];
+                }
+                
+                // Extract deal names from the response
+                const dealNames = data.data.boards[0]?.items?.map(item => item.name) || [];
+                console.log('Fetched deal names from Monday.com:', dealNames);
+                return dealNames;
+                
+            } catch (error) {
+                console.error('Error fetching deal names from Monday.com:', error);
+                
+                // Fallback to mock data if API call fails
+                console.log('Falling back to mock deal names');
+                return [
+                    '2901 Indian Creek Dr Miami, FL',
+                    '1920 NE Terre View Dr, Pullman, WA',
+                    '495 Eleventh Ave, Hudson Yards, NY',
+                    'Nautilus 220',
+                    'Tempo Hotel Patchogue',
+                    'Comfort Inn Times Square',
+                    'Flushing Pointe Three Pack Hilton'
+                ];
+            }
+        }
 
         // Filter options
         const filterOptions = {
@@ -947,13 +1000,13 @@
                 filters.dealName = value;
                 
                 if (value.length > 0) {
-                    const matches = mockDealNames.filter(deal => 
+                    const matches = boardDealNames.filter(deal => 
                         deal.toLowerCase().includes(value.toLowerCase())
                     );
                     
                     if (matches.length > 0) {
                         dropdown.innerHTML = matches.map(match => 
-                            `<div class="monday-suggestion-item" onclick="selectDealName('${match}')">${match}</div>`
+                            `<div class="monday-suggestion-item" onclick="selectDealName('${match.replace(/'/g, "\\'")}')">${match}</div>`
                         ).join('');
                         dropdown.classList.add('show');
                     } else {
@@ -1192,7 +1245,19 @@
         }
 
         // Initialize the application
-        function init() {
+        async function init() {
+            // Show loading indicator for deal names
+            const dealNameInput = document.getElementById('dealName');
+            dealNameInput.placeholder = 'Loading deal names from Monday.com...';
+            dealNameInput.disabled = true;
+            
+            // Fetch deal names from Monday.com board
+            boardDealNames = await fetchDealNamesFromMonday();
+            
+            // Update input placeholder and enable it
+            dealNameInput.placeholder = 'Start typing deal name...';
+            dealNameInput.disabled = false;
+            
             // Create multi-select fields
             createMultiSelectField('programType', filterOptions.programType, 'programType');
             createMultiSelectField('propertyType', filterOptions.propertyType, 'propertyType');
